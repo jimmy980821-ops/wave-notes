@@ -35,12 +35,28 @@ block('01　路徑差決定相位差',eq('Δr = |r₁ − r₂|')+'<p>r₁、r�
 block('02　用數字判斷干涉',`<p>兩個同相波源，波長 λ = 4 cm。</p>${table(['到波源的距離','路徑差','結果'],[['10 cm、18 cm','8 cm = 2λ','建設性'],['10 cm、16 cm','6 cm = 3λ/2','破壞性'],['10 cm、10 cm','0','建設性']])}`)+
 block('03　波腹線不是一直隆起的線','<p><strong>波腹線</strong>是建設性干涉位置連成的線，水面仍會上下振動。<strong>波節線</strong>是理想完全抵消的位置連成的線，水面維持零位移。</p>'+warning('波峰描述某瞬間的最高位移；波腹描述振幅最大的位置，兩者不同。'))}
 ];
+completeCurriculum(lessons);
 let current=0;
 const nav=document.querySelector('#nav');
-lessons.forEach((l,i)=>{const b=document.createElement('button');b.innerHTML=`<span>1-${i+1}</span>${l.title}`;b.addEventListener('click',()=>select(i,true));nav.append(b)});
-function select(i,scroll=false){current=i;const l=lessons[i];document.querySelector('#crumb').textContent=l.title;document.querySelector('#lesson').innerHTML=`<div class="chapter-kicker">1-${i+1} / 學習筆記</div><h2 class="lesson-title">${l.title}</h2><p class="lead">${l.lead}</p><div class="takeaway"><strong>這一節先記住</strong>${l.key}</div>${l.body}`;[...nav.children].forEach((b,n)=>{if(n===i)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});document.querySelector('#prev').disabled=i===0;document.querySelector('#next').disabled=i===6;document.querySelector('#page-count').textContent=`${i+1} / 7 節`;if(scroll)document.querySelector('main').scrollIntoView({behavior:'auto',block:'start'});}
-document.querySelector('#prev').onclick=()=>select(current-1,true);document.querySelector('#next').onclick=()=>select(current+1,true);
+lessons.forEach((l,i)=>{const b=document.createElement('button');b.innerHTML=`<span>${l.id}</span>${l.title}`;b.addEventListener('click',()=>select(i,true));nav.append(b)});
+function select(i,scroll=false){
+ if(i<0||i>=lessons.length)return;
+ current=i;const l=lessons[i];
+ document.querySelector('#chapter-crumb').textContent=l.chapter===1?'第一章 波動':'第二章 聲波';
+ document.querySelector('#crumb').textContent=l.title;
+ document.querySelector('#lesson').innerHTML=`<div class="chapter-kicker">${l.id} / 學習筆記</div><h2 class="lesson-title" tabindex="-1">${l.title}</h2><p class="lead">${l.lead}</p><div class="takeaway"><strong>這一節先記住</strong>${l.key}</div>${l.body}`;
+ [...nav.children].forEach((b,n)=>{if(n===i)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+ document.querySelector('#prev').disabled=i===0;
+ document.querySelector('#next').disabled=i===lessons.length-1;
+ document.querySelector('#page-count').textContent=`${i+1} / ${lessons.length} 節`;
+ Study.mount(l);window.mountSimulations();
+ document.querySelector('.lab').hidden=i>1;
+ if(scroll){history.replaceState(null,'','#'+l.id);document.querySelector('.lesson-title').focus({preventScroll:true});document.querySelector('#lesson').scrollIntoView({behavior:'auto',block:'start'});}
+}
+document.querySelector('#prev').onclick=()=>select(current-1,true);
+document.querySelector('#next').onclick=()=>select(current+1,true);
 const formulas=[['週期與頻率','f = 1/T'],['波速','v = fλ = λ/T'],['繩波（張力 F、線密度 μ）','v = √(F/μ)'],['位移疊加','y = y₁ + y₂'],['相鄰波節／相鄰波腹','距離 = λ/2'],['相鄰波節與波腹','距離 = λ/4'],['兩端固定弦（n = 1, 2, …）','fₙ = nv/(2L)'],['一端固定、一端自由','fₙ = (2n−1)v/(4L)'],['折射（角度相對於法線）','sin θ₁ / sin θ₂ = v₁ / v₂'],['同相波源：建設性','Δr = mλ'],['同相波源：破壞性','Δr = (m+½)λ']];
+formulas.push(['空氣聲速（常溫附近，θ 為 °C）','v ≈ 331 + 0.6θ'],['回聲往返測距','d = vΔt/2'],['聲強級','β = 10 log₁₀(I/I₀)'],['開管（n = 1,2,3,…）','fₙ = nv/(2L)'],['單端閉管（第 n 個模式）','fₙ = (2n−1)v/(4L)'],['相鄰共鳴長度差','λ = 2(L₂−L₁)'],['拍頻','f拍 = |f₁−f₂|']);
 document.querySelector('#formula-list').innerHTML=formulas.map(r=>`<div class="formula-row"><span>${r[0]}</span><strong>${r[1]}</strong></div>`).join('');
 const dialog=document.querySelector('#formula-dialog');document.querySelector('#formulas').onclick=()=>dialog.showModal();document.querySelector('#close-dialog').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
 const canvas=document.querySelector('#wave'),ctx=canvas.getContext('2d'),freq=document.querySelector('#freq'),amp=document.querySelector('#amp');let time=0,last=0,paused=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -48,4 +64,4 @@ function update(){const f=Number(freq.value),a=Number(amp.value);document.queryS
 freq.oninput=amp.oninput=update;
 function syncPause(){document.querySelector('#pause').textContent=paused?'播放動畫':'暫停動畫';document.querySelector('#pause').setAttribute('aria-pressed',String(paused))}document.querySelector('#pause').onclick=()=>{paused=!paused;syncPause()};syncPause();
 function draw(now){if(last&&!paused)time+=Math.min((now-last)/1000,.05);last=now;const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(devicePixelRatio||1,2);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);const left=40,right=w-18,top=25,mid=(h-22)/2,scale=(h-65)/2,f=Number(freq.value),a=Number(amp.value),lambda=2/f;ctx.lineWidth=1;ctx.strokeStyle='#294751';ctx.fillStyle='#9fbcc4';ctx.font='11px system-ui';for(let x=0;x<=6;x++){const px=left+(right-left)*x/6;ctx.beginPath();ctx.moveTo(px,top);ctx.lineTo(px,h-28);ctx.stroke();ctx.fillText(String(x),px-3,h-10)}ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(left,mid);ctx.lineTo(right,mid);ctx.stroke();ctx.setLineDash([]);ctx.fillText('y (m)',9,15);ctx.fillText('x (m)',right-28,h-10);ctx.fillText('0',20,mid+4);ctx.fillStyle='#79b3bf';ctx.fillText('向右傳播 →',right-95,18);ctx.beginPath();ctx.strokeStyle='#5ce0c0';ctx.lineWidth=2.5;for(let px=left;px<=right;px++){const x=(px-left)/(right-left)*6,y=mid-a*scale*Math.sin(2*Math.PI*(x/lambda-f*time));if(px===left)ctx.moveTo(px,y);else ctx.lineTo(px,y)}ctx.stroke();const xp=2.5,px=left+xp/6*(right-left),py=mid-a*scale*Math.sin(2*Math.PI*(xp/lambda-f*time));ctx.strokeStyle='#bd824b';ctx.setLineDash([3,5]);ctx.beginPath();ctx.moveTo(px,top);ctx.lineTo(px,h-28);ctx.stroke();ctx.setLineDash([]);ctx.beginPath();ctx.fillStyle='#ffb265';ctx.arc(px,py,6,0,Math.PI*2);ctx.fill();requestAnimationFrame(draw)}
-select(0);update();requestAnimationFrame(draw);
+select(Math.max(0,lessons.findIndex(l=>'#'+l.id===location.hash)));update();requestAnimationFrame(draw);
