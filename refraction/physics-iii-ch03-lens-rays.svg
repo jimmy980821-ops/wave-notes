@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 403" role="img" aria-labelledby="title desc">
+  <title id="title">會聚透鏡的實像和虛像</title>
+  <desc id="desc">上圖物距大於兩倍焦距，兩條光線實際在右側相交。下圖物在焦距內，光線在右側發散，往回延長才在左側相交。</desc>
+  <defs>
+    <marker id="ray-a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#087e85"/></marker>
+    <marker id="ray-b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#9a4e18"/></marker>
+    <marker id="object" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#182532"/></marker>
+  </defs>
+  <rect width="640" height="403" fill="#fff"/>
+  <g font-family="system-ui, sans-serif" fill="#182532">
+    <text x="28" y="29" font-size="20" font-weight="600">會聚透鏡｜物在 2F 之外</text>
+    <text x="28" y="207" font-size="20" font-weight="600">會聚透鏡｜物在 F 之內</text>
+    <g font-size="15">
+      <text x="110" y="49">物</text><text x="470" y="155">倒立實像</text>
+      <text x="268" y="266">物</text><text x="111" y="225">正立虛像</text>
+      <text x="244" y="126">F</text><text x="324" y="126">O</text><text x="404" y="126">F</text>
+      <text x="164" y="126">2F</text><text x="483" y="126">2F</text>
+      <text x="244" y="335">F</text><text x="324" y="335">O</text><text x="404" y="335">F</text>
+      <text x="560" y="98">光軸</text><text x="560" y="304">光軸</text>
+      <text x="60" y="383">平行入射光</text><text x="240" y="383">穿過光心的光</text><text x="445" y="383">反向延長線</text>
+    </g>
+  </g>
+  <path d="M28 105H610M28 311H610M28 173H610" stroke="#a6b0ba" fill="none"/>
+  <path d="M330 40V157M330 234V349" stroke="#526778" stroke-width="3"/>
+  <path d="M324 48L330 40L336 48M324 149L330 157L336 149M324 242L330 234L336 242M324 341L330 349L336 341" stroke="#526778" stroke-width="2" fill="none"/>
+  <path d="M170 101v8m80-8v8m160-8v8m80-8v8M250 307v8m160-8v8" stroke="#526778" stroke-width="2"/>
+  <g fill="none" stroke-width="2.5">
+    <path d="M130 57H330L484 149.4" stroke="#087e85" marker-end="url(#ray-a)"/>
+    <path d="M130 57L505 147" stroke="#9a4e18" marker-end="url(#ray-b)"/>
+    <path d="M282 275H330L517 359.15" stroke="#087e85" marker-end="url(#ray-a)"/>
+    <path d="M282 275L387 353.75" stroke="#9a4e18" marker-end="url(#ray-b)"/>
+    <path d="M330 275L210 221M282 275L210 221" stroke="#526778" stroke-dasharray="6 4"/>
+    <path d="M28 378h25" stroke="#087e85"/><path d="M208 378h25" stroke="#9a4e18"/>
+    <path d="M413 378h25" stroke="#526778" stroke-dasharray="6 4"/>
+  </g>
+  <g fill="none" stroke="#182532" stroke-width="3" marker-end="url(#object)">
+    <path d="M130 105V57"/><path d="M463.33 105V137"/><path d="M282 311V275"/><path d="M210 311V221" stroke-dasharray="5 4"/>
+  </g>
+</svg>

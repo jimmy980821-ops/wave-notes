@@ -39,6 +39,11 @@ completeCurriculum(lessons);
 let current=0;
 const nav=document.querySelector('#nav');
 lessons.forEach((l,i)=>{const b=document.createElement('button');b.innerHTML=`<span>${l.id}</span>${l.title}`;b.addEventListener('click',()=>select(i,true));nav.append(b)});
+const refraction=document.createElement('a');
+refraction.href='./refraction/';
+refraction.className='outline';
+refraction.textContent='第 3 章 光的折射及其應用';
+nav.append(refraction);
 function select(i,scroll=false){
  if(i<0||i>=lessons.length)return;
  current=i;const l=lessons[i];
